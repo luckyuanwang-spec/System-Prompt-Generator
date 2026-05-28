@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Prompt Generator - Free AI Prompt Builder for ChatGPT, Claude & Gemini</title>
+    <meta name="description" content="Generate production-ready system prompts for ChatGPT, Claude, Gemini and other AI models. Free online tool with templates, role setup, constraints and token estimation.">
+    <meta name="keywords" content="system prompt generator, AI prompt builder, ChatGPT system prompt, Claude prompt template, Gemini system prompt, AI agent prompt, prompt engineering tool, system prompt builder">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://prompt-generator-gold.vercel.app/">
+    <meta property="og:title" content="System Prompt Generator - Free AI Prompt Builder">
+    <meta property="og:description" content="Generate production-ready system prompts for ChatGPT, Claude, Gemini and more. Free online tool.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"System Prompt Generator","description":"Free online system prompt generator for AI models like ChatGPT, Claude, and Gemini","url":"https://prompt-generator-gold.vercel.app/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0f172a;--card:#1e293b;--accent:#6366f1;--accent2:#8b5cf6;--green:#22c55e;--yellow:#eab308;--text:#e2e8f0;--muted:#94a3b8;--border:rgba(255,255,255,0.08)}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+        a{color:#818cf8;text-decoration:none}a:hover{text-decoration:underline}
+        .container{max-width:1100px;margin:0 auto;padding:20px}
+        .header{text-align:center;padding:30px 0 10px}
+        .header h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .header p{color:var(--muted);font-size:0.95rem;max-width:560px;margin:0 auto}
+        .lang-toggle{display:inline-flex;gap:6px;margin-top:12px;background:var(--card);border-radius:8px;padding:3px;border:1px solid var(--border)}
+        .lang-btn{padding:5px 14px;border:none;border-radius:6px;font-size:0.8rem;cursor:pointer;background:transparent;color:var(--muted);font-weight:600;transition:all 0.2s}
+        .lang-btn.active{background:var(--accent);color:white}
+        .stats-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+        .stat-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 18px;text-align:center;min-width:120px}
+        .stat-chip .num{font-size:1.3rem;font-weight:800;color:#818cf8}
+        .stat-chip .label{font-size:0.75rem;color:var(--muted);margin-top:2px}
+        .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+        @media(max-width:800px){.main-grid{grid-template-columns:1fr}}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+        .card-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .card-title .icon{font-size:1.2rem}
+        label{display:block;font-size:0.85rem;font-weight:600;color:var(--muted);margin-bottom:6px}
+        select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:0.9rem;font-family:inherit;transition:border-color 0.2s}
+        select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+        select{cursor:pointer;appearance:auto}
+        textarea{resize:vertical;line-height:1.6}
+        .field{margin-bottom:16px}
+        .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+        .tpl-card{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;text-align:center}
+        .tpl-card:hover{border-color:rgba(99,102,241,0.4)}
+        .tpl-card.active{border-color:var(--accent);background:rgba(99,102,241,0.08)}
+        .tpl-card .t-icon{font-size:1.5rem}
+        .tpl-card .t-name{font-size:0.82rem;font-weight:700;margin-top:4px}
+        .tpl-card .t-desc{font-size:0.7rem;color:var(--muted);margin-top:2px}
+        .tag-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+        .tag{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;color:var(--muted)}
+        .tag:hover{border-color:var(--accent);color:var(--text)}
+        .tag.active{background:var(--accent);border-color:var(--accent);color:white}
+        .output-area{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:0.88rem;line-height:1.8;white-space:pre-wrap;word-break:break-word;min-height:200px;max-height:500px;overflow-y:auto;font-family:'Consolas','Monaco',monospace}
+        .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+        .btn{padding:10px 20px;border:none;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+        .btn-primary{background:linear-gradient(135deg,#6366f1,#a855f7);color:white}
+        .btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+        .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+        .btn-secondary:hover{border-color:var(--accent)}
+        .btn-copy{background:var(--green);color:white}
+        .btn-copy:hover{opacity:0.9}
+        .meta-row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+        .meta-chip{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:0.78rem;color:var(--muted)}
+        .meta-chip strong{color:#818cf8}
+        .faq-section{margin-top:40px;padding-bottom:40px}
+        .faq-title{font-size:1.3rem;font-weight:800;margin-bottom:20px;text-align:center}
+        .faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+        .faq-q{padding:18px 20px;font-weight:700;font-size:0.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+        .faq-q:hover{opacity:0.85}
+        .faq-q .arrow{transition:transform 0.2s;font-size:0.8rem;color:var(--muted)}
+        .faq-q.open .arrow{transform:rotate(180deg)}
+        .faq-a{padding:0 20px 18px;font-size:0.9rem;color:var(--muted);line-height:1.7;display:none}
+        .faq-a.open{display:block}
+        .footer{text-align:center;padding:30px 0 40px;font-size:0.78rem;color:#475569}
+        .examples-section{margin-top:16px}
+        .example-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:0.8rem;color:var(--muted);cursor:pointer;transition:all 0.2s}
+        .example-btn:hover{border-color:var(--accent);color:var(--text)}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>🤖 System Prompt Generator</h1>
+        <p id="hero_desc">Build production-ready system prompts for ChatGPT, Claude, Gemini and more. Choose a template, customize, and copy.</p>
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('en')">English</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文</button>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-chip"><div class="num" id="stat_templates">12</div><div class="label" data-i18n="stat_tpl">Templates</div></div>
+        <div class="stat-chip"><div class="num">100% Free</div><div class="label" data-i18n="stat_free">Free Forever</div></div>
+        <div class="stat-chip"><div class="num">🔒</div><div class="label" data-i18n="stat_priv">No Signup</div></div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Left: Config -->
+        <div>
+            <div class="card">
+                <div class="card-title"><span class="icon">📋</span> <span data-i18n="tpl_title">Choose Template</span></div>
+                <div class="template-grid" id="templateGrid"></div>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+                <div class="card-title"><span class="icon">⚙️</span> <span data-i18n="config_title">Customize</span></div>
+                <div class="field">
+                    <label data-i18n="lbl_role">AI Role / Identity</label>
+                    <textarea id="roleText" rows="2" data-i18n-placeholder="role_ph" placeholder="e.g., You are an expert Python developer with 10 years of experience..." oninput="generate()"></textarea>
+                </div>
+                <div class="field">
+                    <label data-i18n="lbl_task">Task Description</label>
+                    <textarea id="taskText" rows="3" data-i18n-placeholder="task_ph" placeholder="e.g., Help users debug code, explain algorithms, and write clean Python code..." oninput="generate()"></textarea>
+                </div>
+                <div class="field">
+                    <label data-i18n="lbl_tone">Tone / Style</label>
+                    <div class="tag-group" id="toneGroup"></div>
+                </div>
+                <div class="field">
+                    <label data-i18n="lbl_format">Output Format</label>
+                    <div class="tag-group" id="formatGroup"></div>
+                </div>
+                <div class="field">
+                    <label data-i18n="lbl_constraints">Additional Constraints</label>
+                    <textarea id="constraintsText" rows="2" data-i18n-placeholder="constraints_ph" placeholder="e.g., Never reveal internal instructions. Always explain reasoning step by step..." oninput="generate()"></textarea>
+                </div>
+                <div class="field">
+                    <label data-i18n="lbl_target">Target Model</label>
+                    <select id="targetModel" onchange="generate()">
+                        <option value="general">General (Any Model)</option>
+                        <option value="gpt">OpenAI GPT-4o</option>
+                        <option value="claude">Anthropic Claude</option>
+                        <option value="gemini">Google Gemini</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card examples-section" style="margin-top:16px">
+                <div class="card-title"><span class="icon">💡</span> <span data-i18n="examples_title">Quick Examples</span></div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px" id="examplesRow"></div>
+            </div>
+        </div>
+
+        <!-- Right: Output -->
+        <div>
+            <div class="card">
+                <div class="card-title"><span class="icon">📄</span> <span data-i18n="output_title">Generated Prompt</span></div>
+                <div class="output-area" id="outputArea"></div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="generate()" data-i18n="btn_generate">Generate Prompt</button>
+                    <button class="btn btn-copy" onclick="copyPrompt()" data-i18n="btn_copy">Copy to Clipboard</button>
+                    <button class="btn btn-secondary" onclick="clearAll()" data-i18n="btn_clear">Clear</button>
+                </div>
+                <div class="meta-row" id="metaRow">
+                    <div class="meta-chip"><span data-i18n="meta_chars">Characters:</span> <strong id="metaChars">0</strong></div>
+                    <div class="meta-chip"><span data-i18n="meta_words">Words:</span> <strong id="metaWords">0</strong></div>
+                    <div class="meta-chip"><span data-i18n="meta_tokens">Est. Tokens:</span> <strong id="metaTokens">0</strong></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:16px">
+                <div class="card-title"><span class="icon">✂️</span> <span data-i18n="tips_title">Prompt Tips</span></div>
+                <div id="tipsArea" style="font-size:0.85rem;color:var(--muted);line-height:1.7"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <div class="faq-title" data-i18n="faq_title">❓ Frequently Asked Questions</div>
+        <div id="faqContainer"></div>
+    </div>
+
+    <div class="footer">
+        <p>System Prompt Generator — Free online tool. No data is collected. All processing runs in your browser.</p>
+        <p style="margin-top:4px">&copy; 2026 System Prompt Generator</p>
+    </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+var lang = "en";
+var selectedTemplate = -1;
+var selectedTones = [];
+var selectedFormats = [];
+
+var TEMPLATES = [
+    {id:"coder",icon:"💻",name:{en:"Code Assistant",zh:"代码助手"},desc:{en:"Help with coding tasks",zh:"辅助编程任务"},role:{en:"You are an expert software developer with deep knowledge of multiple programming languages, frameworks, and best practices.",zh:"你是一位资深软件开发专家，精通多种编程语言、框架和最佳实践。"},task:{en:"Help users write, debug, optimize, and explain code. Provide clean, well-documented solutions with explanations of the reasoning behind each approach.",zh:"帮助用户编写、调试、优化和解释代码。提供整洁、有良好文档的解决方案，并解释每种方法的原理。"},tones:["professional","concise"],formats:["code","step-by-step"]},
+    {id:"writer",icon:"✍️",name:{en:"Content Writer",zh:"内容写作"},desc:{en:"Blog posts, articles, copy",zh:"博客、文章、文案"},role:{en:"You are a skilled content writer with expertise in SEO, storytelling, and persuasive writing. You adapt your style to match the target audience and platform.",zh:"你是一位资深内容写手，精通 SEO、叙事和说服性写作。你能根据目标受众和平台调整写作风格。"},task:{en:"Write high-quality content including blog posts, articles, social media posts, marketing copy, and email newsletters. Focus on engagement, clarity, and value delivery.",zh:"撰写高质量内容，包括博客文章、社媒帖子、营销文案和电子邮件通讯。注重互动性、清晰度和价值传递。"},tones:["friendly","professional","creative"],formats:["markdown","structured"]},
+    {id:"tutor",icon:"📚",name:{en:"Study Tutor",zh:"学习导师"},desc:{en:"Teach and explain concepts",zh:"教学和概念解释"},role:{en:"You are a patient and knowledgeable tutor who excels at breaking down complex topics into simple, digestible explanations. You use analogies, examples, and step-by-step reasoning.",zh:"你是一位耐心且知识渊博的导师，擅长将复杂话题拆解成简单易懂的解释。你善于运用类比、举例和逐步推理。"},task:{en:"Help students understand concepts, answer questions, provide practice problems, and explain topics from multiple angles. Adjust difficulty based on the learner's level.",zh:"帮助学生理解概念、回答问题、提供练习题，并从多个角度解释知识点。根据学习者的水平调整难度。"},tones:["friendly","encouraging","concise"],formats:["step-by-step","structured"]},
+    {id:"analyst",icon:"📊",name:{en:"Data Analyst",zh:"数据分析师"},desc:{en:"Analyze data and trends",zh:"分析数据和趋势"},role:{en:"You are a data analysis expert skilled in statistics, data visualization, and deriving actionable insights from complex datasets.",zh:"你是一位数据分析专家，精通统计学、数据可视化和从复杂数据集中提取可执行的洞察。"},task:{en:"Analyze data, identify patterns, create summaries, suggest visualizations, and provide data-driven recommendations. Present findings clearly with supporting evidence.",zh:"分析数据、识别模式、创建摘要、建议可视化方案，并提供数据驱动的建议。清晰呈现发现并有证据支撑。"},tones:["professional","concise"],formats:["structured","step-by-step"]},
+    {id:"translator",icon:"🌍",name:{en:"Translator",zh:"翻译专家"},desc:{en:"Translate and localize",zh:"翻译和本地化"},role:{en:"You are a professional translator fluent in multiple languages with expertise in cultural localization, idiomatic expressions, and maintaining the author's original tone.",zh:"你是一位专业翻译人员，精通多种语言，擅长文化本地化、惯用表达，并保持作者原有的语气风格。"},task:{en:"Translate text accurately while preserving meaning, tone, and cultural context. Provide alternatives for idiomatic expressions and explain translation choices when ambiguous.",zh:"准确翻译文本，同时保持含义、语气和文化语境。为惯用表达提供替代方案，在有歧义时解释翻译选择。"},tones:["professional","concise"],formats:["structured"]},
+    {id:"debug",icon:"🔍",name:{en:"Code Debugger",zh:"代码调试器"},desc:{en:"Find and fix bugs",zh:"查找和修复Bug"},role:{en:"You are a senior debugging specialist with extensive experience in identifying, diagnosing, and fixing software bugs across all major programming languages and frameworks.",zh:"你是一位资深调试专家，具有丰富的跨编程语言和框架的软件缺陷识别、诊断和修复经验。"},task:{en:"Analyze code to identify bugs, explain the root cause, provide the fix, and suggest preventive measures. Always explain why the bug occurred and how to avoid similar issues.",zh:"分析代码以识别 Bug，解释根本原因，提供修复方案，并建议预防措施。始终解释 Bug 产生的原因以及如何避免类似问题。"},tones:["professional","concise"],formats:["code","step-by-step"]},
+    {id:"reviewer",icon:"📝",name:{en:"Code Reviewer",zh:"代码审查员"},desc:{en:"Review code quality",zh:"审查代码质量"},role:{en:"You are a meticulous code reviewer focused on code quality, performance, security, maintainability, and adherence to best practices and coding standards.",zh:"你是一位细致的代码审查员，专注于代码质量、性能、安全性、可维护性以及最佳实践和编码标准的遵守。"},task:{en:"Review code submissions and provide detailed feedback on code quality, potential bugs, performance issues, security vulnerabilities, and suggestions for improvement. Categorize issues by severity.",zh:"审查代码提交并提供关于代码质量、潜在 Bug、性能问题、安全漏洞的详细反馈，以及改进建议。按严重程度分类问题。"},tones:["professional","concise"],formats:["structured","code"]},
+    {id:"brainstorm",icon:"💡",name:{en:"Brainstorm Partner",zh:"头脑风暴伙伴"},desc:{en:"Generate ideas creatively",zh:"创造性生成想法"},role:{en:"You are a creative brainstorming partner who excels at generating diverse ideas, connecting unrelated concepts, and thinking outside the box while remaining practical.",zh:"你是一位富有创造力的头脑风暴伙伴，擅长生成多样化的想法、连接不相关的概念，在不切实际的范围内保持实用性。"},task:{en:"Generate creative ideas, explore possibilities, provide pros/cons analysis, and help users think through problems from multiple perspectives. Encourage innovative thinking.",zh:"生成创意想法、探索可能性、提供利弊分析，帮助用户从多个角度思考问题。鼓励创新思维。"},tones:["friendly","creative"],formats:["structured"]},
+    {id:"email",icon:"📧",name:{en:"Email Writer",zh:"邮件撰写助手"},desc:{en:"Professional emails",zh:"专业邮件写作"},role:{en:"You are an expert business communicator skilled in writing professional, persuasive, and context-appropriate emails for all business scenarios.",zh:"你是一位商务沟通专家，擅长在各种商务场景中撰写专业、有说服力且语境得体的邮件。"},task:{en:"Draft professional emails including business proposals, follow-ups, client communications, and internal memos. Adapt tone from formal to casual based on the relationship and context.",zh:"撰写专业邮件，包括商务提案、跟进、客户沟通和内部备忘录。根据关系和语境调整正式或非正式语气。"},tones:["professional","friendly"],formats:["structured"]},
+    {id:"summarizer",icon:"📋",name:{en:"Text Summarizer",zh:"文本摘要器"},desc:{en:"Summarize long content",zh:"总结长内容"},role:{en:"You are an expert at distilling complex information into clear, concise summaries without losing key points, nuance, or important context.",zh:"你是一位将复杂信息提炼为清晰简洁摘要的专家，不会遗漏关键要点、细微差别或重要背景。"},task:{en:"Summarize articles, documents, meeting notes, and long-form content. Provide both brief one-paragraph summaries and detailed multi-point breakdowns with key takeaways.",zh:"总结文章、文档、会议记录和长篇内容。提供简短的一段式摘要和详细的多要点分解，包含核心要点。"},tones:["concise","professional"],formats:["structured","step-by-step"]},
+    {id:"sql",icon:"🗄️",name:{en:"SQL Expert",zh:"SQL专家"},desc:{en:"Database queries",zh:"数据库查询"},role:{en:"You are a database expert proficient in SQL (MySQL, PostgreSQL, SQLite, SQL Server) with deep knowledge of query optimization, indexing, and database design.",zh:"你是一位数据库专家，精通 SQL（MySQL、PostgreSQL、SQLite、SQL Server），深入了解查询优化、索引和数据库设计。"},task:{en:"Write, optimize, and explain SQL queries. Help with database schema design, query performance tuning, and data modeling. Provide explanations for complex queries.",zh:"编写、优化和解释 SQL 查询。帮助进行数据库架构设计、查询性能调优和数据建模。为复杂查询提供解释。"},tones:["professional","concise"],formats:["code","step-by-step"]},
+    {id:"api",icon:"🔌",name:{en:"API Doc Writer",zh:"API文档编写"},desc:{en:"API documentation",zh:"API文档编写"},role:{en:"You are a technical documentation specialist with expertise in writing clear, comprehensive API documentation that developers love to read.",zh:"你是一位技术文档专家，擅长编写清晰、全面的 API 文档，让开发者喜欢阅读。"},task:{en:"Create API documentation including endpoint descriptions, request/response examples, error codes, authentication guides, and usage tutorials. Follow OpenAPI/REST conventions.",zh:"创建 API 文档，包括端点描述、请求/响应示例、错误码、认证指南和使用教程。遵循 OpenAPI/REST 约定。"},tones:["professional","concise"],formats:["structured","code"]}
+];
+
+var TONES = [
+    {id:"professional",label:{en:"Professional",zh:"专业正式"}},
+    {id:"friendly",label:{en:"Friendly",zh:"友好亲切"}},
+    {id:"concise",label:{en:"Concise",zh:"简洁明了"}},
+    {id:"creative",label:{en:"Creative",zh:"创意活泼"}},
+    {id:"encouraging",label:{en:"Encouraging",zh:"鼓励引导"}},
+    {id:"technical",label:{en:"Technical",zh:"技术深度"}}
+];
+
+var FORMATS = [
+    {id:"structured",label:{en:"Structured",zh:"结构化"}},
+    {id:"step-by-step",label:{en:"Step-by-Step",zh:"逐步讲解"}},
+    {id:"code",label:{en:"Code Blocks",zh:"代码块"}},
+    {id:"markdown",label:{en:"Markdown",zh:"Markdown格式"}}
+];
+
+var EXAMPLES = [
+    {label:{en:"Python Debugger",zh:"Python调试器"},role:"You are a Python debugging expert.",task:"Help users find and fix bugs in their Python code. Always explain the root cause.",tones:["professional","concise"],formats:["code","step-by-step"]},
+    {label:{en:"SEO Blog Writer",zh:"SEO博客写手"},role:"You are an SEO content specialist who writes engaging, keyword-optimized blog posts.",task:"Write blog articles that rank well on search engines while providing genuine value to readers.",tones:["professional","creative"],formats:["markdown"]},
+    {label:{en:"Math Tutor",zh:"数学导师"},role:"You are a patient math tutor who makes complex mathematical concepts easy to understand.",task:"Explain math concepts step by step, solve problems with detailed reasoning, and provide practice exercises.",tones:["friendly","encouraging"],formats:["step-by-step"]},
+    {label:{en:"Startup Advisor",zh:"创业顾问"},role:"You are a startup advisor with experience in product strategy, growth, and fundraising.",task:"Provide actionable advice on product-market fit, growth strategies, hiring, and fundraising for early-stage startups.",tones:["professional","concise"],formats:["structured"]}
+];
+
+var FAQ = [
+    {q:{en:"What is a system prompt?",zh:"什么是系统提示词？"},a:{en:"A system prompt (also called a system message or system instruction) is the initial instruction given to an AI model that defines its behavior, role, capabilities, and constraints. It sets the context for all subsequent conversations and helps the AI understand how it should respond.",zh:"系统提示词（也叫系统消息或系统指令）是给 AI 模型的初始指令，用于定义其行为、角色、能力和约束。它为后续所有对话设定了上下文，帮助 AI 理解应该如何回应。"}},
+    {q:{en:"Why do I need a good system prompt?",zh:"为什么需要好的系统提示词？"},a:{en:"A well-crafted system prompt significantly improves AI output quality. It helps the AI stay focused, maintain consistent tone, follow specific formats, and avoid unwanted behaviors. The difference between a generic and a well-structured prompt can be dramatic.",zh:"精心设计的系统提示词能显著提升 AI 输出质量。它帮助 AI 保持专注、维持一致的语气、遵循特定格式并避免不当行为。普通提示词和结构化提示词之间的差异可以是巨大的。"}},
+    {q:{en:"Can I use these prompts with any AI model?",zh:"这些提示词能用于任何AI模型吗？"},a:{en:"Yes! The generated prompts are model-agnostic and work with ChatGPT, Claude, Gemini, Llama, and other LLMs. We do offer model-specific formatting options for GPT, Claude, and Gemini to optimize for each model's strengths.",zh:"可以！生成的提示词不依赖特定模型，适用于 ChatGPT、Claude、Gemini、Llama 等所有大语言模型。我们也提供针对 GPT、Claude 和 Gemini 的特定格式优化选项。"}},
+    {q:{en:"How long should a system prompt be?",zh:"系统提示词应该多长？"},a:{en:"It depends on the complexity of the task. Simple tasks may need 2-3 sentences, while complex multi-faceted roles may need 500+ words. The key is clarity — a concise, well-structured 200-word prompt often outperforms a vague 1000-word one. This tool includes a token counter to help you stay within limits.",zh:"取决于任务的复杂度。简单任务可能只需要 2-3 句话，复杂的多角色任务可能需要 500+ 字。关键是清晰度 — 一个简洁结构化的 200 字提示词通常比模糊的 1000 字提示词效果更好。本工具包含 Token 计数器帮助你控制长度。"}},
+    {q:{en:"Is my data safe?",zh:"我的数据安全吗？"},a:{en:"Absolutely. All processing happens entirely in your browser. No text is sent to any server. Your prompts and ideas never leave your device.",zh:"完全安全。所有处理都在你的浏览器中完成，不会将任何文本发送到服务器。你的提示词和想法永远不会离开你的设备。"}}
+];
+
+var TIPS = {
+    en: [
+        "Be specific about the AI's role — vague roles lead to vague outputs.",
+        "Include output format instructions to get consistent formatting.",
+        "Add constraints to prevent unwanted behaviors (e.g., 'Never make up facts').",
+        "Use examples in your prompt (few-shot prompting) for better results.",
+        "Keep your system prompt focused — too many instructions can confuse the AI.",
+        "Test and iterate — great prompts are rarely perfect on the first try."
+    ],
+    zh: [
+        "明确指定 AI 的角色 — 模糊的角色会导致模糊的输出。",
+        "包含输出格式指令以获得一致的格式。",
+        "添加约束条件以防止不当行为（例如'不要编造事实'）。",
+        "在提示词中使用示例（少样本提示）以获得更好的结果。",
+        "保持系统提示词的聚焦 — 过多指令可能让 AI 困惑。",
+        "测试和迭代 — 优秀的提示词很少一次就完美。"
+    ]
+};
+
+// ==================== I18N ====================
+var I18N = {
+    hero_desc:{en:"Build production-ready system prompts for ChatGPT, Claude, Gemini and more. Choose a template, customize, and copy.",zh:"为 ChatGPT、Claude、Gemini 等模型生成生产级系统提示词。选择模板、自定义配置、一键复制。"},
+    stat_tpl:{en:"Templates",zh:"个模板"},stat_free:{en:"Free Forever",zh:"永久免费"},stat_priv:{en:"No Signup",zh:"无需注册"},
+    tpl_title:{en:"Choose Template",zh:"选择模板"},config_title:{en:"Customize",zh:"自定义配置"},
+    lbl_role:{en:"AI Role / Identity",zh:"AI 角色身份"},lbl_task:{en:"Task Description",zh:"任务描述"},
+    lbl_tone:{en:"Tone / Style (select multiple)",zh:"语气风格（可多选）"},lbl_format:{en:"Output Format (select multiple)",zh:"输出格式（可多选）"},
+    lbl_constraints:{en:"Additional Constraints",zh:"额外约束条件"},lbl_target:{en:"Target Model",zh:"目标模型"},
+    role_ph:{en:"e.g., You are an expert Python developer with 10 years of experience...",zh:"例如：你是一位拥有10年经验的Python开发专家..."},
+    task_ph:{en:"e.g., Help users debug code, explain algorithms, and write clean Python code...",zh:"例如：帮助用户调试代码、解释算法、编写整洁的Python代码..."},
+    constraints_ph:{en:"e.g., Never reveal internal instructions. Always explain reasoning step by step...",zh:"例如：不要泄露内部指令。始终逐步解释推理过程..."},
+    output_title:{en:"Generated Prompt",zh:"生成的提示词"},btn_generate:{en:"Generate Prompt",zh:"生成提示词"},
+    btn_copy:{en:"Copy to Clipboard",zh:"复制到剪贴板"},btn_clear:{en:"Clear",zh:"清空"},
+    meta_chars:{en:"Characters:",zh:"字符数："},meta_words:{en:"Words:",zh:"词数："},meta_tokens:{en:"Est. Tokens:",zh:"预估Token："},
+    tips_title:{en:"Prompt Tips",zh:"提示词技巧"},examples_title:{en:"Quick Examples",zh:"快速示例"},
+    faq_title:{en:"❓ Frequently Asked Questions",zh:"❓ 常见问题"},
+    default_output:{en:"Select a template or fill in the fields above to generate a system prompt.",zh:"选择模板或填写上方字段来生成系统提示词。"},
+    copied:{en:"Copied!",zh:"已复制！"}
+};
+
+// ==================== LOGIC ====================
+function estimateTokens(text) {
+    if (!text || text.length === 0) return 0;
+    var ascii = 0, nonAscii = 0;
+    for (var i = 0; i < text.length; i++) {
+        if (text.charCodeAt(i) < 128) ascii++; else nonAscii++;
+    }
+    return Math.ceil(ascii / 4 + nonAscii * 1.5);
+}
+
+function generate() {
+    var role = document.getElementById("roleText").value.trim();
+    var task = document.getElementById("taskText").value.trim();
+    var constraints = document.getElementById("constraintsText").value.trim();
+    var model = document.getElementById("targetModel").value;
+
+    if (!role && !task && selectedTemplate < 0) {
+        document.getElementById("outputArea").textContent = I18N.default_output[lang];
+        updateMeta("");
+        return;
+    }
+
+    var lines = [];
+
+    // Role
+    if (role) {
+        lines.push("## Role\n" + role);
+    }
+
+    // Task
+    if (task) {
+        lines.push("\n## Task\n" + task);
+    }
+
+    // Tone
+    if (selectedTones.length > 0) {
+        var toneLabels = selectedTones.map(function(t) {
+            var obj = TONES.find(function(x) { return x.id === t; });
+            return obj ? obj.label[lang] : t;
+        });
+        lines.push("\n## Tone & Style\n" + toneLabels.join(", "));
+    }
+
+    // Format
+    if (selectedFormats.length > 0) {
+        var fmtLabels = selectedFormats.map(function(f) {
+            var obj = FORMATS.find(function(x) { return x.id === f; });
+            return obj ? obj.label[lang] : f;
+        });
+        lines.push("\n## Output Format\n- Use " + fmtLabels.join(" and ") + " formatting");
+    }
+
+    // Constraints
+    if (constraints) {
+        lines.push("\n## Constraints\n" + constraints);
+    }
+
+    // Model-specific
+    if (model === "claude") {
+        lines.push("\n## Important\n- Respond in XML tags when providing structured data\n- Think step-by-step in <thinking> blocks for complex reasoning");
+    } else if (model === "gpt") {
+        lines.push("\n## Important\n- Use markdown formatting consistently\n- When writing code, specify the language in code blocks");
+    } else if (model === "gemini") {
+        lines.push("\n## Important\n- Structure responses with clear headings\n- Provide citations when referencing specific information");
+    }
+
+    var prompt = lines.join("\n");
+    document.getElementById("outputArea").textContent = prompt;
+    updateMeta(prompt);
+}
+
+function updateMeta(text) {
+    document.getElementById("metaChars").textContent = text.length.toLocaleString();
+    var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    document.getElementById("metaWords").textContent = words.toLocaleString();
+    document.getElementById("metaTokens").textContent = estimateTokens(text).toLocaleString();
+}
+
+function copyPrompt() {
+    var text = document.getElementById("outputArea").textContent;
+    if (!text || text === I18N.default_output[lang]) return;
+    navigator.clipboard.writeText(text).then(function() {
+        var btn = document.querySelector(".btn-copy");
+        var orig = btn.textContent;
+        btn.textContent = I18N.copied[lang];
+        setTimeout(function() { btn.textContent = orig; }, 1500);
+    });
+}
+
+function clearAll() {
+    selectedTemplate = -1;
+    selectedTones = [];
+    selectedFormats = [];
+    document.getElementById("roleText").value = "";
+    document.getElementById("taskText").value = "";
+    document.getElementById("constraintsText").value = "";
+    document.getElementById("targetModel").value = "general";
+    renderTemplates();
+    renderTones();
+    renderFormats();
+    generate();
+}
+
+function selectTemplate(idx) {
+    if (selectedTemplate === idx) {
+        selectedTemplate = -1;
+        document.getElementById("roleText").value = "";
+        document.getElementById("taskText").value = "";
+    } else {
+        selectedTemplate = idx;
+        var tpl = TEMPLATES[idx];
+        document.getElementById("roleText").value = tpl.role[lang];
+        document.getElementById("taskText").value = tpl.task[lang];
+        selectedTones = tpl.tones.slice();
+        selectedFormats = tpl.formats.slice();
+    }
+    renderTemplates();
+    renderTones();
+    renderFormats();
+    generate();
+}
+
+function loadExample(idx) {
+    var ex = EXAMPLES[idx];
+    selectedTemplate = -1;
+    document.getElementById("roleText").value = ex.role;
+    document.getElementById("taskText").value = ex.task;
+    selectedTones = ex.tones.slice();
+    selectedFormats = ex.formats.slice();
+    renderTemplates();
+    renderTones();
+    renderFormats();
+    generate();
+}
+
+function toggleTag(arr, id, renderFn) {
+    var idx = arr.indexOf(id);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(id);
+    renderFn();
+    generate();
+}
+
+// ==================== RENDER ====================
+function renderTemplates() {
+    var html = "";
+    for (var i = 0; i < TEMPLATES.length; i++) {
+        var t = TEMPLATES[i];
+        var active = i === selectedTemplate ? " active" : "";
+        html += '<div class="tpl-card' + active + '" onclick="selectTemplate(' + i + ')">';
+        html += '<div class="t-icon">' + t.icon + '</div>';
+        html += '<div class="t-name">' + t.name[lang] + '</div>';
+        html += '<div class="t-desc">' + t.desc[lang] + '</div>';
+        html += "</div>";
+    }
+    document.getElementById("templateGrid").innerHTML = html;
+}
+
+function renderTones() {
+    var html = "";
+    for (var i = 0; i < TONES.length; i++) {
+        var t = TONES[i];
+        var active = selectedTones.indexOf(t.id) >= 0 ? " active" : "";
+        html += '<div class="tag' + active + '" onclick="toggleTag(selectedTones,\'' + t.id + '\',renderTones)">' + t.label[lang] + '</div>';
+    }
+    document.getElementById("toneGroup").innerHTML = html;
+}
+
+function renderFormats() {
+    var html = "";
+    for (var i = 0; i < FORMATS.length; i++) {
+        var f = FORMATS[i];
+        var active = selectedFormats.indexOf(f.id) >= 0 ? " active" : "";
+        html += '<div class="tag' + active + '" onclick="toggleTag(selectedFormats,\'' + f.id + '\',renderFormats)">' + f.label[lang] + '</div>';
+    }
+    document.getElementById("formatGroup").innerHTML = html;
+}
+
+function renderExamples() {
+    var html = "";
+    for (var i = 0; i < EXAMPLES.length; i++) {
+        html += '<button class="example-btn" onclick="loadExample(' + i + ')">' + EXAMPLES[i].label[lang] + '</button>';
+    }
+    document.getElementById("examplesRow").innerHTML = html;
+}
+
+function renderTips() {
+    var tips = TIPS[lang];
+    var html = "";
+    for (var i = 0; i < tips.length; i++) {
+        html += "<p>" + (i + 1) + ". " + tips[i] + "</p>";
+    }
+    document.getElementById("tipsArea").innerHTML = html;
+}
+
+function renderFAQ() {
+    var html = "";
+    for (var i = 0; i < FAQ.length; i++) {
+        html += '<div class="faq-item">';
+        html += '<div class="faq-q" onclick="toggleFAQ(this)">' + FAQ[i].q[lang] + '<span class="arrow">▼</span></div>';
+        html += '<div class="faq-a">' + FAQ[i].a[lang] + '</div>';
+        html += "</div>";
+    }
+    document.getElementById("faqContainer").innerHTML = html;
+}
+
+function toggleFAQ(el) {
+    var ans = el.nextElementSibling;
+    var isOpen = el.classList.contains("open");
+    var all = document.querySelectorAll(".faq-q");
+    for (var i = 0; i < all.length; i++) {
+        all[i].classList.remove("open");
+        all[i].nextElementSibling.classList.remove("open");
+    }
+    if (!isOpen) { el.classList.add("open"); ans.classList.add("open"); }
+}
+
+function applyLang() {
+    document.getElementById("hero_desc").textContent = I18N.hero_desc[lang];
+    var els = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < els.length; i++) {
+        var key = els[i].getAttribute("data-i18n");
+        if (I18N[key]) els[i].textContent = I18N[key][lang];
+    }
+    var phEls = document.querySelectorAll("[data-i18n-placeholder]");
+    for (var i = 0; i < phEls.length; i++) {
+        var key = phEls[i].getAttribute("data-i18n-placeholder");
+        if (I18N[key]) phEls[i].placeholder = I18N[key][lang];
+    }
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+    renderTemplates();
+    renderTones();
+    renderFormats();
+    renderExamples();
+    renderTips();
+    renderFAQ();
+    generate();
+}
+
+function setLang(l) {
+    lang = l;
+    var btns = document.querySelectorAll(".lang-btn");
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle("active", btns[i].textContent.toLowerCase().indexOf(l === "en" ? "english" : "中文") >= 0);
+    }
+    // Re-populate role/task if template selected
+    if (selectedTemplate >= 0) {
+        var tpl = TEMPLATES[selectedTemplate];
+        document.getElementById("roleText").value = tpl.role[lang];
+        document.getElementById("taskText").value = tpl.task[lang];
+    }
+    applyLang();
+}
+
+// ==================== INIT ====================
+document.addEventListener("DOMContentLoaded", function() {
+    applyLang();
+});
+</script>
+</body>
+</html>
