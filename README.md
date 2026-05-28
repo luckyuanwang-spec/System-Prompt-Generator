@@ -21,7 +21,7 @@ Free online system prompt builder for AI models like ChatGPT, Claude, and Gemini
 
 ## Live
 
-https://prompt-generator-gold.vercel.app/
+https://system-prompt-generator.vercel.app/
 
 ## License
 
